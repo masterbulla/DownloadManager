@@ -1,6 +1,7 @@
 QT += core
 QT += network
-QT -= gui
+QT += gui
+QT += widgets
 
 CONFIG += c++11
 
@@ -12,8 +13,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     downloadmanager.cpp \
-    textprogressbar.cpp
+    downloaderwindow.cpp
 
 HEADERS += \
     downloadmanager.h \
-    textprogressbar.h
+    downloaderwindow.h
+
+FORMS += \
+    downloaderwindow.ui

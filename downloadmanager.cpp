@@ -6,7 +6,6 @@
 #include <QString>
 #include <QStringList>
 #include <QTimer>
-#include <stdio.h>
 
 DownloadManager::DownloadManager(QObject *parent) : QObject(parent), downloadedCount(0), totalCount(0)
 {
@@ -55,8 +54,7 @@ QString DownloadManager::saveFileName(const QUrl &url)
 void DownloadManager::startNextDownload()
 {
     if (downloadQueue.isEmpty()) {
-        printf("%d/%d files downloaded successfully\n", downloadedCount, totalCount);
-        emit finished();
+        emit finished(downloadedCount,totalCount);
         return;
     }
 
@@ -83,35 +81,17 @@ void DownloadManager::startNextDownload()
             SLOT(downloadReadyRead()));
 
     // prepare the output
-    printf("Downloading %s...\n", url.toEncoded().constData());
     downloadTime.start();
 }
 
 void DownloadManager::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 {
-    progressBar.setStatus(bytesReceived, bytesTotal);
-
-    // calculate the download speed
-    double speed = bytesReceived * 1000.0 / downloadTime.elapsed();
-    QString unit;
-    if (speed < 1024) {
-        unit = "bytes/sec";
-    } else if (speed < 1024*1024) {
-        speed /= 1024;
-        unit = "kB/s";
-    } else {
-        speed /= 1024*1024;
-        unit = "MB/s";
-    }
-
-    progressBar.setMessage(QString::fromLatin1("%1 %2")
-                           .arg(speed, 3, 'f', 1).arg(unit));
-    progressBar.update();
+    emit updateProgress(bytesReceived,bytesTotal);
 }
 
 void DownloadManager::downloadFinished()
 {
-    progressBar.clear();
+    //progressBar.clear();
     output.close();
 
     if (currentDownload->error()) {

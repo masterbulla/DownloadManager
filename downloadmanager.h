@@ -10,8 +10,6 @@
 #include <QUrl>
 #include <QNetworkAccessManager>
 
-#include "textprogressbar.h"
-
 class DownloadManager : public QObject
 {
     Q_OBJECT
@@ -23,7 +21,8 @@ public:
     QString saveFileName(const QUrl &url);
 
 signals:
-    void finished();
+    void finished(int,int);
+    void updateProgress(qint64,qint64);
 
 private slots:
     void startNextDownload();
@@ -37,7 +36,6 @@ private:
     QNetworkReply *currentDownload;
     QFile output;
     QTime downloadTime;
-    TextProgressBar progressBar;
 
     int downloadedCount;
     int totalCount;

@@ -25,7 +25,7 @@ signals:
     void updateProgress(qint64,qint64);
 
 private slots:
-    void startNextDownload();
+    void startNextDownload(/*QString*/);
     void downloadProgress(qint64 bytesReceived, qint64 bytesTotal);
     void downloadFinished();
     void downloadReadyRead();

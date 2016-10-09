@@ -2,6 +2,7 @@
 #define DOWNLOADERWINDOW_H
 
 #include <QMainWindow>
+#include <QProgressBar>
 #include "downloadmanager.h"
 
 namespace Ui {
@@ -21,9 +22,12 @@ private slots:
     void on_finished(int,int);
     void updateProgressStatus(qint64,qint64);
 
+    void on_browseButton_clicked();
+
 private:
     Ui::DownloaderWindow *ui;
     DownloadManager *manager;
+    QProgressBar *progress;
 };
 
 #endif // DOWNLOADERWINDOW_H

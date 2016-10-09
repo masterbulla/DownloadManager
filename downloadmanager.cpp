@@ -7,7 +7,8 @@
 #include <QStringList>
 #include <QTimer>
 
-DownloadManager::DownloadManager(QObject *parent) : QObject(parent), downloadedCount(0), totalCount(0)
+DownloadManager::DownloadManager(QObject *parent) : QObject(parent),
+    downloadedCount(0), totalCount(0)
 {
 
 }
@@ -51,7 +52,7 @@ QString DownloadManager::saveFileName(const QUrl &url)
     return basename;
 }
 
-void DownloadManager::startNextDownload()
+void DownloadManager::startNextDownload(/*QString dir_path*/)
 {
     if (downloadQueue.isEmpty()) {
         emit finished(downloadedCount,totalCount);
@@ -60,6 +61,8 @@ void DownloadManager::startNextDownload()
 
     QUrl url = downloadQueue.dequeue();
 
+//    QString filename = dir_path.append("/");
+//    filename.append(saveFileName(url));
     QString filename = saveFileName(url);
     output.setFileName(filename);
     if (!output.open(QIODevice::WriteOnly)) {
@@ -91,7 +94,6 @@ void DownloadManager::downloadProgress(qint64 bytesReceived, qint64 bytesTotal)
 
 void DownloadManager::downloadFinished()
 {
-    //progressBar.clear();
     output.close();
 
     if (currentDownload->error()) {
@@ -103,7 +105,8 @@ void DownloadManager::downloadFinished()
     }
 
     currentDownload->deleteLater();
-    startNextDownload();
+    emit finished(downloadedCount,totalCount);
+//    startNextDownload();
 }
 
 void DownloadManager::downloadReadyRead()
